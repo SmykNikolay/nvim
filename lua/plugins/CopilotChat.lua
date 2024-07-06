@@ -5,14 +5,8 @@ return {
   opts = function()
     local user = vim.env.USER or "User"
     user = user:sub(1, 1):upper() .. user:sub(2)
-    return {
-      model = "gpt-4",
-      auto_insert_mode = true,
-      show_help = true,
-      question_header = "  " .. user .. " ",
-      answer_header = "  Copilot",
-      system_prompt = string.format(
-        [[Вы являетесь помощником по программированию на базе ИИ.
+    local COPILOT_INSTRUCTIONS = string.format(
+      [[Вы являетесь помощником по программированию на базе ИИ.
 Когда вас спросят, как вас зовут, вы должны ответить "GitHub Copilot".
 Тщательно и точно следуйте требованиям пользователя.
 Соблюдайте политику Microsoft по содержанию.
@@ -44,7 +38,14 @@ return {
 Активный документ - это исходный код, который пользователь просматривает в данный момент.
 Вы можете дать только один ответ на каждый ход разговора.
 ]]
-      ),
+    )
+    return {
+      model = "gpt-4",
+      auto_insert_mode = true,
+      show_help = true,
+      question_header = "  " .. user .. " ",
+      answer_header = "  Copilot",
+      system_prompt = COPILOT_INSTRUCTIONS,
       window = {
         width = 0.4,
       },
@@ -73,6 +74,23 @@ return {
       end,
       desc = "Clear (CopilotChat)",
       mode = { "n", "v" },
+    }, -- Show help actions with telescope
+    {
+      "<leader>ach",
+      function()
+        local actions = require("CopilotChat.actions")
+        require("CopilotChat.integrations.telescope").pick(actions.help_actions())
+      end,
+      desc = "CopilotChat - Help actions",
+    },
+    -- Show prompts actions with telescope
+    {
+      "<leader>acp",
+      function()
+        local actions = require("CopilotChat.actions")
+        require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
+      end,
+      desc = "CopilotChat - Prompt actions",
     },
     {
       "<leader>aq",
@@ -120,44 +138,6 @@ return {
         )
       end,
       desc = "Design Pattern",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>aR",
-      function()
-        require("CopilotChat").ask(
-          "Посоветуй, как улучшить читаемость текущего файла."
-        )
-      end,
-      desc = "Code Readability Improvement Advice",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>aS",
-      function()
-        require("CopilotChat").ask(
-          "Посоветуй, как улучшить безопасность текущего файла."
-        )
-      end,
-      desc = "Security Improvement Advice",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>aF",
-      function()
-        require("CopilotChat").ask(
-          "Посоветуй, как улучшить производительность текущего файла."
-        )
-      end,
-      desc = "Performance Improvement Advice",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>ar",
-      function()
-        require("CopilotChat").ask("Посоветуй, как рефакторить текущий файл.")
-      end,
-      desc = "Refactor Advice",
       mode = { "n", "v" },
     },
     -- Show help actions with telescope
