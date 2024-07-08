@@ -53,7 +53,7 @@ return {
         local select = require("CopilotChat.select")
         return select.visual(source) or select.buffer(source)
       end,
-      language = "ru", -- Указываем язык общения
+      language = "ru",
     }
   end,
   keys = {
@@ -76,23 +76,6 @@ return {
       mode = { "n", "v" },
     }, -- Show help actions with telescope
     {
-      "<leader>ach",
-      function()
-        local actions = require("CopilotChat.actions")
-        require("CopilotChat.integrations.telescope").pick(actions.help_actions())
-      end,
-      desc = "CopilotChat - Help actions",
-    },
-    -- Show prompts actions with telescope
-    {
-      "<leader>acp",
-      function()
-        local actions = require("CopilotChat.actions")
-        require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-      end,
-      desc = "CopilotChat - Prompt actions",
-    },
-    {
       "<leader>aq",
       function()
         local input = vim.fn.input("Quick Chat: ")
@@ -101,6 +84,14 @@ return {
         end
       end,
       desc = "Quick Chat (CopilotChat)",
+      mode = { "n", "v" },
+    },
+    {
+      "<leader>at",
+      function()
+        require("CopilotChat").ask("Переведи свой последний ответ на русский")
+      end,
+      desc = "Translate last answer to Russian",
       mode = { "n", "v" },
     },
     {
